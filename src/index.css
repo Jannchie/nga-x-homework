@@ -1,0 +1,217 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  font-family: "HelveticaNeueW01-55Light", "HelveticaNeue", Helvetica, Arial,
+    Verdana, "Noto Sans Japanese", "Noto Sans SC", "ヒラギノ角ゴ Pro W3",
+    "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック",
+    "MS PGothic", sans-serif;
+  font-size: 12px;
+  line-height: 1em;
+  letter-spacing: 0.1em;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+.page-title {
+  margin-left: 46px;
+}
+
+.grid-item {
+  cursor: pointer;
+}
+
+img {
+  -webkit-filter: brightness(0.98);
+  filter: brightness(0.98);
+  height: auto;
+}
+
+.img-wrapper {
+  width: 100%;
+  position: relative;
+}
+.img-wrapper::before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+.img-item {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.item-title {
+  display: block;
+  margin: 23px 0 14px;
+  line-height: 1.6em;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title-wrapper {
+  display: grid;
+  grid-auto-rows: min-content;
+}
+
+#search {
+  position: relative;
+}
+
+.search-icon {
+  background-image: url("../public/search.svg");
+  width: 30px;
+  z-index: 11;
+  height: 30px;
+  background-size: 13px 12px;
+  background-position: 8px 8px;
+  background-repeat: no-repeat;
+  display: inline;
+  float: left;
+  position: absolute;
+  right: -10px;
+  top: -9px;
+}
+
+.item-thumb {
+  color: #999;
+  line-height: 1.6em;
+  font-size: 12px;
+  height: 110px;
+  letter-spacing: 0.05em;
+  max-width: 100%;
+  display: grid;
+  grid-auto-rows: min-content;
+  font-family: "HelveticaNeueW01-45Ligh";
+}
+ul {
+  margin: 0 0;
+}
+.header {
+  display: flex;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  height: 10px;
+  justify-content: space-between;
+}
+
+ul li {
+  margin-right: 8px;
+  display: inline-block;
+}
+
+li.line {
+  width: 1px;
+  background-color: #999;
+  vertical-align: text-top;
+  height: 12px;
+}
+
+.language-item {
+  text-align: left;
+  text-transform: uppercase;
+}
+.language-item a {
+  display: inline-block;
+}
+
+.thumb-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+p {
+  margin: 0;
+}
+.grid-item {
+  position: relative;
+}
+
+.more {
+  font-size: 12px;
+  color: #000;
+  opacity: 0.8;
+  position: absolute;
+  bottom: 0;
+  letter-spacing: 0.1em;
+}
+.grid-container {
+  display: grid;
+  grid-gap: 65px;
+  margin: 70px 80px;
+  text-align: left;
+  grid-template-columns: repeat(6, 1fr);
+  position: relative;
+}
+@media (max-width: 2318px) {
+  .grid-container {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (max-width: 1816px) {
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1366px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1096px) {
+  .grid-container {
+    grid-gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* @font-face {
+  font-family: "HelveticaNeueW01-Thin";
+  src: url("../fonts/aff68211-86bb-476d-882e-f7a3face144c.woff2") format("woff2"), url("../fonts/50d35bbc-dfd4-48f1-af16-cf058f69421d.woff") format("woff"); } */
+
+@font-face {
+  font-family: "HelveticaNeueW01-45Ligh";
+  src: url("../fonts/5a13f7d1-b615-418e-bc3a-525001b9a671.woff2")
+    format("woff2");
+}
+
+/* @font-face {
+  font-family: "HelveticaNeueW01-55Roma";
+  src: url("../fonts/b0868b4c-234e-47d3-bc59-41ab9de3c0db.woff2") format("woff2"), url("../fonts/bcf54343-d033-41ee-bbd7-2b77df3fe7ba.woff") format("woff"); }
+
+@font-face {
+  font-family: "HelveticaNeueW01-65Medi";
+  src: url("../fonts/3600b37f-2bf1-45f3-be3a-03365f16d9cb.woff2") format("woff2"), url("../fonts/60be5c39-863e-40cb-9434-6ebafb62ab2b.woff") format("woff"); }
+
+@font-face {
+  font-family: "HelveticaNeueW01-75Bold";
+  src: url("../fonts/3b303641-706e-4221-94c4-4fb491f4f8ef.woff2") format("woff2"), url("../fonts/14ff6081-326d-4dae-b778-d7afa66166fc.woff") format("woff"); } */
+
+::selection {
+  color: #fff;
+  background-color: #000;
+}
+a {
+  text-decoration: none;
+  text-decoration-line: none;
+  text-decoration-thickness: initial;
+  text-decoration-style: initial;
+  text-decoration-color: initial;
+  color: #000;
+}
