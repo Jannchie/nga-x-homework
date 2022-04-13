@@ -114,15 +114,20 @@ li.line {
   height: 12px;
 }
 
-.language-item {
+.link-item {
   text-align: left;
   text-transform: uppercase;
+  color: #999;
 }
-.language-item a {
+.link-item:hover {
+  color: #000;
+}
+
+.link-item a {
   display: inline-block;
 }
 
-.thumb-line {
+.desc-line {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -214,4 +219,13 @@ a {
   text-decoration-style: initial;
   text-decoration-color: initial;
   color: #000;
+}
+
+.search-text {
+  font-size: 14px;
+  color: #999;
+  padding: 4px 4px;
+  border-radius: 0px;
+  outline: none;
+  border: 1px solid #999;
 }

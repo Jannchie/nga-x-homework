@@ -4,6 +4,19 @@ import data from './data/data.json';
 import ShuffleText from 'shuffle-text';
 import { useEffect, useRef } from 'react';
 
+function animate({ timing, draw, duration }) {
+  let start = performance.now();
+  requestAnimationFrame(function ani(time) {
+    let timeFraction = (time - start) / duration;
+    if (timeFraction > 1) timeFraction = 1;
+    let progress = timing(timeFraction);
+    draw(progress);
+    if (timeFraction < 1) {
+      requestAnimationFrame(ani);
+    }
+  });
+}
+
 function Link(title) {
   const self = useRef(null)
   // init animation
@@ -23,7 +36,7 @@ function Link(title) {
       text.setText(title);
       text.start();
     }
-  }} className="language-item">
+  }} className="link-item">
     <a href="/">{title}</a>
   </li>;
 }
@@ -35,7 +48,7 @@ function App() {
     if (d.credits_thumb) {
       credits = d.credits_thumb?.map((c, i) => {
         return (
-          <p className="thumb-line" key={i}>
+          <p className="desc-line" key={i}>
             {c.title} : {c.name}
           </p>
         )
@@ -43,7 +56,7 @@ function App() {
     } else {
       credits = d.credits?.filter((c, i) => i < 4).map((c, i) => {
         return (
-          <p className="thumb-line" key={i}>
+          <p className="desc-line" key={i}>
             {c.title} : {c.name}
           </p>
         )
@@ -143,17 +156,7 @@ function App() {
             <li className="line"> </li>
             {Link("CHINESE")}
           </ul>
-          <div id="search" style={{ display: "inline" }}>
-            <input type="text" placeholder="PLEASE INPUT KEYWORD" style={{
-              width: 0,
-              opacity: 0,
-              position: "absolute",
-              right: 0,
-              marginTop: -4,
-              zIndex: 10,
-            }} />
-            <div className="search-icon"></div>
-          </div>
+          {Seacher()}
         </div>
       </header>
       <div className="grid-container">
@@ -165,3 +168,59 @@ function App() {
 }
 
 export default App;
+function Seacher() {
+  const search = useRef(null)
+  function circ(timeFraction) {
+    return 1 - Math.sin(Math.acos(timeFraction));
+  }
+  return <div id="search" style={{ display: "inline", cursor: "pointer" }}
+    onMouseEnter={(e) => {
+      if (search.current && search.current !== document.activeElement) {
+        animate({
+          duration: 200,
+          timing: circ,
+          draw: (progress) => {
+            search.current.style.opacity = progress;
+            search.current.style.width = `${progress * 300}px`;
+          },
+        })
+      }
+    }}
+    onMouseLeave={(e) => {
+      if (search.current) {
+        // if not focused
+        if (search.current !== document.activeElement) {
+          animate({
+            duration: 50,
+            timing: circ,
+            draw: (progress) => {
+              search.current.style.opacity = 1 - progress;
+              search.current.style.width = `${(1 - progress) * 300}px`;
+            },
+          })
+        }
+      }
+    }}
+    onBlur={(e) => {
+      animate({
+        duration: 50,
+        timing: circ,
+        draw: (progress) => {
+          search.current.style.opacity = 1 - progress;
+          search.current.style.width = `${(1 - progress) * 300}px`;
+        },
+      })
+    }}
+  >
+    <input type="text" className="search-text" ref={search} placeholder="PLEASE INPUT KEYWORD" style={{
+      width: 0,
+      opacity: 0,
+      position: "absolute",
+      right: -5,
+      marginTop: -8,
+      zIndex: 10,
+    }} />
+    <div className="search-icon"></div>
+  </div >;
+}
+
