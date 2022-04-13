@@ -2,11 +2,11 @@ import './App.css';
 
 import data from './data/data.json';
 import ShuffleText from 'shuffle-text';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function animate({ timing, draw, duration }) {
   let start = performance.now();
-  requestAnimationFrame(function ani(time) {
+  return requestAnimationFrame(function ani(time) {
     let timeFraction = (time - start) / duration;
     if (timeFraction > 1) timeFraction = 1;
     let progress = timing(timeFraction);
@@ -27,7 +27,7 @@ function Link(title) {
       text.setText(title);
       text.start();
     }
-  })
+  }, [title])
   return <li ref={self} onMouseEnter={(e) => {
     e.target.style.width = `${e.target.offsetWidth}px`
     const text = new ShuffleText(e.target);
@@ -41,68 +41,79 @@ function Link(title) {
   </li>;
 }
 
+function Card(d) {
+  let credits
+  if (d.credits_thumb) {
+    credits = d.credits_thumb?.map((c, i) => {
+      return (
+        <p className="desc-line" key={i}>
+          {c.title} : {c.name}
+        </p>
+      )
+    });
+  } else {
+    credits = d.credits?.filter((c, i) => i < 4).map((c, i) => {
+      return (
+        <p className="desc-line" key={i}>
+          {c.title} : {c.name}
+        </p>
+      )
+    });
+  }
+  const title = useRef(null)
+  useEffect(() => {
+    if (title.current?.innerText === d.title) {
+      title.current.style.height = `${title.current.offsetHeight}px`
+      var text = new ShuffleText(title.current);
+      text.emptyCharacter = ''
+      text.start();
+    }
+  }, [d.title])
+  return (
+    <div className="grid-item" onMouseEnter={() => {
+      if (title.current?.innerText === d.title) {
+        title.current.style.height = `${title.current.offsetHeight}px`
+        var text = new ShuffleText(title.current);
+        text.emptyCharacter = ''
+        text.start();
+      }
+    }} key={d.title}>
+      <div className="img-wrapper">
+        <img className="img-item" alt={d.title} src={`http://kashiwasato.com/${d.mobile_image?.url ?? d.header_image ?? ""}`}></img>
+      </div>
+      <div className="title-wrapper">
+        <div className="item-title" ref={title}>
+          {d.title}
+        </div>
+      </div>
+      <div className="item-thumb">
+        {credits}
+      </div>
+      <p className="more">
+        <span>READ MORE </span>
+        <span className="plus">+</span>
+      </p>
+    </div>
+  );
+}
 
 function App() {
-  const gridList = data.map((d) => {
-    let credits
-    if (d.credits_thumb) {
-      credits = d.credits_thumb?.map((c, i) => {
-        return (
-          <p className="desc-line" key={i}>
-            {c.title} : {c.name}
-          </p>
-        )
-      });
-    } else {
-      credits = d.credits?.filter((c, i) => i < 4).map((c, i) => {
-        return (
-          <p className="desc-line" key={i}>
-            {c.title} : {c.name}
-          </p>
-        )
-      });
-    }
-    const Card = () => {
-      const title = useRef(null)
-      useEffect(() => {
-        if (title.current.innerText === d.title) {
-          title.current.style.height = `${title.current.offsetHeight}px`
-          var text = new ShuffleText(title.current);
-          text.emptyCharacter = ''
-          text.start();
-        }
-      })
-      return (
-        <div className="grid-item" onMouseEnter={() => {
-          if (title.current.innerText === d.title) {
-            title.current.style.height = `${title.current.offsetHeight}px`
-            var text = new ShuffleText(title.current);
-            text.emptyCharacter = ''
-            text.start();
-          }
-        }} key={d.title}>
-          <div className="img-wrapper">
-            <img className="img-item" alt={d.title} src={`http://kashiwasato.com/${d.mobile_image?.url ?? d.header_image ?? ""}`}></img>
-          </div>
-          <div className="title-wrapper">
-            <div className="item-title" ref={title}>
-              {d.title}
-            </div>
-          </div>
-          <div className="item-thumb">
-            {credits}
-          </div>
-          <p className="more">
-            <span>READ MORE </span>
-            <span className="plus">+</span>
-          </p>
-        </div>
-      );
-    }
-    return Card();
-  })
+  const [searchText, setSearchText] = useState("");
+  let currentData;
+  if (searchText !== "") {
+    currentData = data.filter(d => {
+      const jsonStr = JSON.stringify(d);
+      return jsonStr.toLowerCase().includes(searchText.toLowerCase())
+    })
+  } else {
+    currentData = data;
+  }
   const titleDOM = useRef(null)
   const subTitleDOM = useRef(null)
+  const gridList = [];
+  for (let i = 0; i < currentData.length; i++) {
+    gridList.push(<Card key={i} {...currentData[i]} />)
+  }
   // init animation
   useEffect(() => {
     if (titleDOM.current?.innerText === "KASHIWA SATO" && subTitleDOM.current?.innerText === "SAMURAI INC. TOKYO") {
@@ -115,11 +126,11 @@ function App() {
       text2.emptyCharacter = ''
       text2.start();
     }
-  })
+  }, [])
   return (
     <div className="App">
       <header className="header">
-        <div style={{ borderLeftWidth: 34, borderLeft: "34px solid #000", height: 10, cursor: "pointer" }} onMouseEnter={
+        <div className="black-bar" style={{ borderLeft: "34px solid #000", cursor: "pointer" }} onMouseEnter={
           (e) => {
             if (titleDOM.current?.innerText === "KASHIWA SATO" && subTitleDOM.current?.innerText === "SAMURAI INC. TOKYO") {
               const textTitle = new ShuffleText(titleDOM.current);
@@ -133,7 +144,7 @@ function App() {
             }
           }
         }>
-          <div style={{ marginTop: -1 }}>
+          <div className="title-group">
             <span ref={titleDOM} className="page-title">KASHIWA SATO</span>
             <span ref={subTitleDOM} style={{
               marginLeft: 20,
@@ -141,7 +152,7 @@ function App() {
             }}>SAMURAI INC. TOKYO</span>
           </div>
         </div>
-        <div className="languange" style={{ marginRight: 80, marginTop: -1 }}>
+        <div className="link-list" style={{ marginRight: 80, marginTop: -1 }}>
           <ul style={{ display: "inline-block" }}>
             {Link("PROJECT")}
             <li className="line"> </li>
@@ -156,7 +167,7 @@ function App() {
             <li className="line"> </li>
             {Link("CHINESE")}
           </ul>
-          {Seacher()}
+          {Seacher({ setSearchText })}
         </div>
       </header>
       <div className="grid-container">
@@ -168,20 +179,22 @@ function App() {
 }
 
 export default App;
-function Seacher() {
+function Seacher({ setSearchText }) {
   const search = useRef(null)
   function circ(timeFraction) {
     return 1 - Math.sin(Math.acos(timeFraction));
   }
   return <div id="search" style={{ display: "inline", cursor: "pointer" }}
     onMouseEnter={(e) => {
-      if (search.current && search.current !== document.activeElement) {
+      if (search.current && search.current !== document.activeElement && search.current.style.width === "0px") {
         animate({
           duration: 200,
           timing: circ,
           draw: (progress) => {
-            search.current.style.opacity = progress;
-            search.current.style.width = `${progress * 300}px`;
+            if (search.current) {
+              search.current.style.opacity = progress;
+              search.current.style.width = `${progress * 300}px`;
+            }
           },
         })
       }
@@ -194,8 +207,10 @@ function Seacher() {
             duration: 50,
             timing: circ,
             draw: (progress) => {
-              search.current.style.opacity = 1 - progress;
-              search.current.style.width = `${(1 - progress) * 300}px`;
+              if (search.current) {
+                search.current.style.opacity = 1 - progress;
+                search.current.style.width = `${(1 - progress) * 300}px`;
+              }
             },
           })
         }
@@ -206,20 +221,30 @@ function Seacher() {
         duration: 50,
         timing: circ,
         draw: (progress) => {
-          search.current.style.opacity = 1 - progress;
-          search.current.style.width = `${(1 - progress) * 300}px`;
+          if (search.current) {
+            search.current.style.opacity = 1 - progress;
+            search.current.style.width = `${(1 - progress) * 300}px`;
+          }
         },
       })
     }}
   >
-    <input type="text" className="search-text" ref={search} placeholder="PLEASE INPUT KEYWORD" style={{
-      width: 0,
-      opacity: 0,
-      position: "absolute",
-      right: -5,
-      marginTop: -8,
-      zIndex: 10,
-    }} />
+    <input
+      type="text"
+      className="search-text"
+      ref={search}
+      onChange={(e) => {
+        setSearchText(e.target.value)
+      }}
+      placeholder="PLEASE INPUT KEYWORD"
+      style={{
+        width: 0,
+        opacity: 0,
+        position: "absolute",
+        right: -5,
+        marginTop: -8,
+        zIndex: 10,
+      }} />
     <div className="search-icon"></div>
   </div >;
 }

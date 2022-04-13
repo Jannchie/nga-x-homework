@@ -102,6 +102,14 @@ ul {
   justify-content: space-between;
 }
 
+.header {
+  display: flex;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  height: 10px;
+  justify-content: space-between;
+}
+
 ul li {
   margin-right: 8px;
   display: inline-block;
@@ -181,8 +189,30 @@ p {
   }
 }
 @media (max-width: 768px) {
+  .header {
+    height: 28px;
+    text-align: left;
+  }
+  .header span {
+    display: block;
+    margin-left: 20px;
+  }
+  .header .page-title {
+    font-size: 20px;
+  }
+  .black-bar {
+    height: 28px;
+  }
+  .title-group {
+    height: 28px;
+    line-height: 1.3em;
+  }
   .grid-container {
     grid-template-columns: repeat(1, 1fr);
+    margin: 0px;
+  }
+  .link-list {
+    display: none;
   }
 }
 
